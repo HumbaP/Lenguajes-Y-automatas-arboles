@@ -126,39 +126,38 @@ def equals(to_compare, compared):
     return False
 
 
-def infix_postfix(infix):
+###Check this shit
+def infix_posfix(infix_expression):
     op_stack =[]
     operators = "()-+/*"
     out_infix=""
-    for char in infix :
-        if(char not in operators):
-            out_infix+= char
-        else:
-            if (not(op_stack) or op_stack[-1]=="(" or greater(op_stack[-1], char)):
+    for char in infix_expression:
+        if(char not in operators):#Es operador
+            out_infix+=char
+        else: #No es operador
+            if(not(op_stack) or op_stack[-1]=='('):
+                op_stack.append(char)
+            elif(char==')'):
+                while(not(op_stack) or op_stack[-1]=='('):
+                    out_infix+=op_stack.pop()
+                op_stack.pop()#Descartamos el (
+            elif(greater(char,op_stack[-1])):
+                op_stack.append(char)
+            elif(equals(char, op_stack[-1])):
                 op_stack.append(char)
             else:
-                if(char=="("):
-                    op_stack.append(char)
-                elif(char==")"):
-                    while(not(op_stack)):
-                        popped = op_stack.pop()
-                        if(popped=="("):
-                            break
-                        out_infix+=popped
-                else:
-                    while(not(op_stack) and (not(greater(op_stack[-1], char)) or equals(op_stack[-1], char))):
-                        popped = op_stack.pop()
-                        if(popped==")" or popped=="("):
-                            break
-                        out_infix+=popped
-                            
+                while(not(op_stack) and (greater(op_stack[-1],char))):
+                    out_infix+=op_stack.pop()
     while(op_stack):
-        out_infix+= op_stack.pop()
+        out_infix+=op_stack.pop()
     return out_infix
+            
 
-expression="A+B*C"
+expression="A*B/C+D"
 
-infix_exp= infix_postfix(expression)
+infix_exp= infix_posfix(expression)
+
+print(infix_exp)
 
 tree = BinaryTree(infix_exp)
 
