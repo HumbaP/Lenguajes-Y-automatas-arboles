@@ -135,19 +135,17 @@ def infix_posfix(infix_expression):
         if(char not in operators):#Es operador
             out_infix+=char
         else: #No es operador
-            if(not(op_stack) or op_stack[-1]=='('):
+            if(char=='('):
                 op_stack.append(char)
-            elif(char==')'):
-                while(not(op_stack) or op_stack[-1]=='('):
+                continue           
+            if(char==')'):
+                while(op_stack and not(op_stack[-1]=='(')):
                     out_infix+=op_stack.pop()
-                op_stack.pop()#Descartamos el (
-            elif(greater(char,op_stack[-1])):
-                op_stack.append(char)
-            elif(equals(char, op_stack[-1])):
-                op_stack.append(char)
-            else:
-                while(not(op_stack) and (greater(op_stack[-1],char))):
-                    out_infix+=op_stack.pop()
+                op_stack.pop()#Quitamos el ( faltante
+                continue
+            while(op_stack and (greater(char, op_stack[-1]) or equals(char,op_stack[-1]))):
+                out_infix+=op_stack.pop()
+            op_stack.append(char)
     while(op_stack):
         out_infix+=op_stack.pop()
     return out_infix
